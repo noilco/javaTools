@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "type": "java",
       "name": "Launch Current File",
@@ -16,6 +17,13 @@
       "request": "launch",
       "mainClass": "Solution01",
       "projectName": "hackerrank_48894f9e"
+    },
+    {
+      "type": "java",
+      "name": "Launch Solution02",
+      "request": "launch",
+      "mainClass": "com.github.nolico.easytools.Solution02",
+      "args": ["/Users/norikofujisawa/Develop/java/hackerrank/input/test.csv", "/Users/norikofujisawa/Develop/java/hackerrank/output/test.csv"]
     }
   ]
 }

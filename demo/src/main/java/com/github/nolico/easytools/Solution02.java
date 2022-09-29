@@ -1,10 +1,16 @@
-import java.util.*;
-import java.io.File;
+package com.github.nolico.easytools;
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 public class Solution02 {
   public static void main(String[] args) throws Exception {
@@ -16,19 +22,19 @@ public class Solution02 {
     sol2.writeCoverageCsv(writeFilePath);
   }
 
-  public void readCoverageCsv(String fileAbsolutePath) throws FileNotFoundException {
-    File csvFile = new File(fileAbsolutePath);
-    Scanner reader = new Scanner(csvFile);
-
-    while (reader.hasNextLine()) {
-      String line = reader.nextLine();
-      String[] cols = line.split(",");
-      String className = cols[0];
-      List<String> covered = Arrays.asList(cols[1].split(","));
-      List<String> uncovered = Arrays.asList(cols[2].split(","));
-      getListDifference(className, covered, uncovered);
+  public void readCoverageCsv(String fileAbsolutePath) throws IOException {
+    List<String[]> lines = null;
+    try (CSVReader reader = new CSVReader(new FileReader(fileAbsolutePath))) {
+        lines = reader.readAll();
     }
-    reader.close();
+
+    lines.forEach(line -> {
+      String className = line[0];
+      List<String> covered = Arrays.asList(line[1].split(","));
+      List<String> uncovered = Arrays.asList(line[2].split(","));
+      getListDifference(className, covered, uncovered);
+    });
+
   }
 
   public void writeCoverageCsv(String outputFilePath) throws IOException {
@@ -62,7 +68,6 @@ public class Solution02 {
     }
 
     addNoDuplicate(coverList, covered);
-    removeInList(coverList, uncovered);
 
     addNoDuplicate(uncoverList, uncovered);
     removeInList(uncoverList, covered);
@@ -72,14 +77,16 @@ public class Solution02 {
 
     coverageMap.put(className, coverageRateMap);
 
-    Double dblRate = Double.valueOf(coverList.size() / coverList.size() + uncoverList.size());
+    Double dblRate = 0d;
+    if (coverList.size() != 0 || uncoverList.size() != 0) Double.valueOf(coverList.size() / coverList.size() + uncoverList.size());
     classCoverageMap.put(className, dblRate);
   }
 
   private void addNoDuplicate(List<String> targetList, List<String> sourceArr) {
     for (int i = 0; i < sourceArr.size(); i++) {
-      if (!targetList.contains(sourceArr.get(i))) {
-        targetList.add(sourceArr.get(i));
+      String challenge = sourceArr.get(i).replace("[", "").replace("]", "");
+      if (!targetList.contains(challenge)) {
+        targetList.add(challenge);
       }
     }
   }
@@ -89,8 +96,9 @@ public class Solution02 {
       return;
     }
     for (int i = 0; i < sourceArr.size(); i++) {
-      if (targetList.contains(sourceArr.get(i))) {
-        targetList.remove(sourceArr.get(i));
+      String challenge = sourceArr.get(i).replace("[", "").replace("]", "");
+      if (targetList.contains(challenge)) {
+        targetList.remove(challenge);
       }
     }
 
