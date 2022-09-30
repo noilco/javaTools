@@ -79,7 +79,7 @@ public class Solution02 {
     coverageMap.put(className, coverageRateMap);
 
     Double dblRate = 0d;
-    if (uncoverList.size() == 0){
+    if (uncoverList.size() == 0 || uncoverList.get(0).equals("0")){
       dblRate = 1.00d;
     } else {
       dblRate = Double.valueOf(coverList.size()) / Double.valueOf(coverList.size() + uncoverList.size());
