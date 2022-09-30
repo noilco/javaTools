@@ -42,6 +42,7 @@ public class Solution02 {
     for (String className : classCoverageMap.keySet()) {
       String line = className + "," + new BigDecimal(classCoverageMap.get(className)).setScale(3, RoundingMode.HALF_UP).toString();
       writer.write(line);
+      writer.write(System.lineSeparator());
     }
     writer.close();
   }
@@ -78,7 +79,11 @@ public class Solution02 {
     coverageMap.put(className, coverageRateMap);
 
     Double dblRate = 0d;
-    if (coverList.size() != 0 || uncoverList.size() != 0) Double.valueOf(coverList.size() / coverList.size() + uncoverList.size());
+    if (uncoverList.size() == 0){
+      dblRate = 1.00d;
+    } else {
+      dblRate = Double.valueOf(coverList.size()) / Double.valueOf(coverList.size() + uncoverList.size());
+    }
     classCoverageMap.put(className, dblRate);
   }
 
